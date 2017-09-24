@@ -1,0 +1,13 @@
+#!/bin/bash
+
+docker run \
+    --detach \
+    --volume /tmp/.X11-unix:/tmp/.X11-unix \
+    --volume $PWD:/code \
+    --volume /dev/shm:/dev/shm \
+    --volume $HOME/.ssh:/home/developer/.ssh \
+    --volume $HOME/.gitconfig:/home/developer/.gitconfig \
+    --workdir /code \
+    --user $(id -u $(whoami)):$(id -g $(whoami)) \
+    --env DISPLAY \
+    atom:latest
