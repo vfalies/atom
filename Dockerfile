@@ -1,54 +1,41 @@
-FROM debian:stretch
+FROM php:7.1
 LABEL maintainer "Vincent Falies <vincent.falies@gmail.com>"
 
 # Install base dependencies
 RUN apt-get update && apt-get install -y \
-    ca-certificates \
-    build-essential \
-    gnupg2 \
-    ssh \
-    openssl \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libmcrypt-dev \
+        libpng12-dev \
+        libsqlite3-dev \
+        libssl-dev \
+        libcurl3-dev \
+        libxml2-dev \
+        libzzip-dev \
+        ssmtp \
+        mailutils \
+        wget \
+        curl \
+    && docker-php-ext-install mcrypt mysqli pdo_mysql xmlrpc zip \
+    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-install gd
+
+# Atom dependencies
+RUN apt-get install -y \
+    git \
     gconf2 \
     gconf-service \
-    gvfs-bin \
-    libasound2 \
-    libcap2 \
-    libgconf-2-4 \
-    libgnome-keyring-dev \
     libgtk2.0-0 \
     libnotify4 \
-    libnss3 \
-    libxkbfile1 \
-    libxss1 \
     libxtst6 \
+    libnss3 \
+    gvfs-bin \
     xdg-utils
 
-# Install dependencies
+# X11 dependencies
 RUN apt-get install -y \
-    sqlite3 \
-    nodejs \
-    nodejs-legacy \
-    php \
-    php-curl \
-    php-sqlite3 \
-    php-mbstring \
-    php-xml \
-    php-pdo-pgsql \
-    php-bcmath \
-    php-mcrypt \
-    php-zip \
-    php-bz2 \
-    php-gd \
-    php-ldap \
-    php-apcu \
-    php-xdebug \
-    curl \
-    zip \
-    git \
-    git-flow \
-    wget \
-    unzip \
-	&& rm -rf /var/lib/apt/lists/*
+    libxss1 \
+    libxkbfile1
 
 # Install Composer
 RUN wget https://raw.githubusercontent.com/composer/getcomposer.org/1b137f8bf6db3e79a38a5bc45324414a6b1f9df2/web/installer -O - | php -- --install-dir=/usr/local/bin --filename=composer
@@ -87,27 +74,27 @@ RUN set -x \
 USER developer
 
 #Install atom packages
-RUN apm install language-docker \
-                project-manager \
-                minimap \
-                atom-beautify \
-                atom-ungit \
+RUN apm install aligner \
+                aligner-javascript \
+                aligner-php \
+                busy-signal \
+                docblockr \
+                file-icons \
+                git-plus \
+                hyperclick \
+                intentions \
+                language-docker \
                 linter \
                 linter-ui-default \
-                intentions \
-                busy-signal \
-                file-icons \
-                highlight-line \
-                color-picker \
-                auto-indent \
-                linter-docker \
-                language-gherkin \
-                php-twig \
                 php-integrator-base \
-                php-integrator-linter \
+                php-integrator-autocomplete-plus \
                 php-integrator-navigation \
-                hyperclick \
-                php-integrator-autocomplete-plus
+                php-integrator-linter \
+                php-integrator-refactoring \
+                project-manager \
+                php-twig \
+                symbols-list \
+                platformio-ide-terminal
 
 # Autorun atom
 ENTRYPOINT [ "atom", "--foreground" ]
