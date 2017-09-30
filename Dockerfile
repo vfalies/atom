@@ -1,5 +1,5 @@
 FROM php:7.1
-LABEL maintainer "Vincent Falies <vincent.falies@gmail.com>"
+LABEL maintainer "Vincent Falies <vincent@vfac.fr>"
 
 # Install base dependencies
 RUN apt-get update && apt-get install -y \
@@ -12,8 +12,6 @@ RUN apt-get update && apt-get install -y \
         libcurl3-dev \
         libxml2-dev \
         libzzip-dev \
-        ssmtp \
-        mailutils \
         wget \
         curl \
     && docker-php-ext-install mcrypt mysqli pdo_mysql xmlrpc zip \
